@@ -1,82 +1,422 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>高速製冷迷你小風扇</title>
-  <style>
-    body {
-      font-family: "Noto Sans TC", sans-serif;
-      margin: 0;
-      background: linear-gradient(to bottom, #e3f2fd, #ffffff);
-      color: #333;
-      line-height: 1.6;
-    }
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .product-image {
-      width: 100%;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    h1, h2 {
-      color: #512da8;
-    }
-    .highlight {
-      background-color: #ffecb3;
-      padding: 5px 10px;
-      border-radius: 5px;
-      display: inline-block;
-    }
-    ul {
-      padding-left: 20px;
-    }
-    .price {
-      font-size: 1.5em;
-      color: #d32f2f;
-      margin-top: 10px;
-    }
-    .button {
-      display: inline-block;
-      margin-top: 20px;
-      background: #43a047;
-      color: white;
-      padding: 15px 25px;
-      border-radius: 30px;
-      text-decoration: none;
-      font-size: 1.2em;
-    }
-    .button:hover {
-      background: #2e7d32;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訂單管理後台</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .order-section {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin: 10px 0;
+        }
+        .promotion {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #ddd;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .item-details {
+            flex: 1;
+            min-width: 300px;
+        }
+        .item-images {
+            flex: 1;
+            min-width: 300px;
+        }
+        .image-upload {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .image-upload:hover {
+            border-color: #999;
+        }
+        .image-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .preview-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .remove-image {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .editor-container {
+            margin-bottom: 20px;
+        }
+        .product-image {
+            max-width: 200px;
+            max-height: 200px;
+            margin: 10px 0;
+            display: block;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <img src="S__192241727_0.jpg" alt="高速製冷迷你小風扇" class="product-image">
-
-    <h1>🌞夏天太熱怎麼辦？這台救命！🌞</h1>
-    <h2>🔥2025爆款製冷神器 強勢回歸！</h2>
-    <p class="highlight">❄️ 數位顯示製冷風扇 ❄️</p>
-    <p>顏色任選：黑 / 白 / 紫</p>
-
-    <p class="price">💥市價 $598 → <strong>限時團購價 $438！</strong></p>
-
-    <ul>
-      <li>✔ 半導體超導製冷技術，涼感立現</li>
-      <li>✔ 3600mAh 大容量，續航高達12小時</li>
-      <li>✔ 9M/S 強勁風速，冷得有感</li>
-      <li>✔ 手持 / 掛脖 / 桌面 多種用法超方便</li>
-      <li>✔ 贈品加碼：充電線 + 掛脖繩 ✅</li>
-    </ul>
-
-    <p>🏕 出門旅遊｜🏢 上班通勤｜🏠 居家追劇<br>隨時隨地都能享受極速涼感🍃</p>
-    <p>🔥數量有限，錯過就要等明年！</p>
-
-    <a href="https://lin.ee/xxx" class="button">📩 點我下單 +1 開涼！</a>
-  </div>
+    <h1>訂單管理後台</h1>
+    
+    <div class="order-section">
+        <h2>產品主圖</h2>
+        
+        <div class="editor-container">
+            <label for="main-product-image">產品主圖:</label>
+            <input type="file" id="main-product-image" accept="image/*" class="hidden">
+            <div id="main-image-upload" class="image-upload">
+                <p>點擊上傳產品主圖</p>
+                <p><small>建議尺寸: 800x800像素</small></p>
+            </div>
+            <div id="main-image-preview" class="image-preview"></div>
+        </div>
+    </div>
+    
+    <div class="order-section">
+        <h2>訂單基本資訊</h2>
+        
+        <div class="editor-container">
+            <label for="product-title">產品標題:</label>
+            <input type="text" id="product-title" value="高速製冷送你小風扇">
+        </div>
+        
+        <div class="editor-container">
+            <label for="product-price">價格:</label>
+            <input type="text" id="product-price" value="NT$990">
+        </div>
+        
+        <div class="editor-container">
+            <label for="group-option">組合選項:</label>
+            <textarea id="group-option" rows="3">2人組
+618優惠🖩買二送一3人組均價（426）
+618優惠🖩4人組~均價（395）限200組</textarea>
+        </div>
+    </div>
+    
+    <div class="order-section">
+        <h2>商品項目</h2>
+        
+        <div class="item">
+            <div class="item-details">
+                <h3>第1件(已選)</h3>
+                <div class="editor-container">
+                    <label for="item1-color">顏色:</label>
+                    <select id="item1-color">
+                        <option value="白色" selected>白色</option>
+                        <option value="黑色">黑色</option>
+                        <option value="淺紫色">淺紫色</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="item-images">
+                <label>商品圖片:</label>
+                <input type="file" id="item1-image" accept="image/*" class="hidden" multiple>
+                <div id="item1-image-upload" class="image-upload">
+                    <p>點擊上傳商品圖片</p>
+                    <p><small>可上傳多張圖片</small></p>
+                </div>
+                <div id="item1-image-preview" class="image-preview"></div>
+            </div>
+        </div>
+        
+        <div class="item">
+            <div class="item-details">
+                <h3>第2件(已選)</h3>
+                <div class="editor-container">
+                    <label for="item2-color">顏色:</label>
+                    <select id="item2-color">
+                        <option value="白色" selected>白色</option>
+                        <option value="黑色">黑色</option>
+                        <option value="淺紫色">淺紫色</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="item-images">
+                <label>商品圖片:</label>
+                <input type="file" id="item2-image" accept="image/*" class="hidden" multiple>
+                <div id="item2-image-upload" class="image-upload">
+                    <p>點擊上傳商品圖片</p>
+                    <p><small>可上傳多張圖片</small></p>
+                </div>
+                <div id="item2-image-preview" class="image-preview"></div>
+            </div>
+        </div>
+        
+        <div class="editor-container">
+            <label for="original-price">原價:</label>
+            <input type="text" id="original-price" value="NT$990">
+        </div>
+        
+        <div class="editor-container">
+            <label for="order-price">訂單價格:</label>
+            <input type="text" id="order-price" value="NT$990">
+        </div>
+    </div>
+    
+    <div class="order-section">
+        <h2>物流方式</h2>
+        
+        <div class="editor-container">
+            <label>物流選項:</label>
+            <table>
+                <tr>
+                    <td><input type="checkbox" id="delivery1" checked> 宅配到府</td>
+                    <td><input type="checkbox" id="delivery2" checked> 7-11取貨</td>
+                    <td><input type="checkbox" id="delivery3" checked> 全家取貨</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="editor-container">
+            <label for="delivery-note">物流說明:</label>
+            <textarea id="delivery-note" rows="3">您的地址需明確到市區路號（樓、室）。本商場可接受7-11，全家的代收。</textarea>
+        </div>
+    </div>
+    
+    <div class="order-section">
+        <h2>付款方式</h2>
+        
+        <div class="editor-container">
+            <label for="payment-method">付款方式:</label>
+            <input type="text" id="payment-method" value="貨到付款">
+        </div>
+        
+        <div class="form-group">
+            <label for="customer-name">姓名:</label>
+            <input type="text" id="customer-name">
+        </div>
+        
+        <div class="form-group">
+            <label for="customer-phone">手機:</label>
+            <input type="text" id="customer-phone">
+        </div>
+        
+        <div class="form-group">
+            <label for="customer-country">國家/地區:</label>
+            <input type="text" id="customer-country" value="台灣">
+        </div>
+        
+        <div class="form-group">
+            <label for="customer-city">選擇市區:</label>
+            <select id="customer-city">
+                <option value="">請選擇</option>
+                <option value="台北市">台北市</option>
+                <option value="新北市">新北市</option>
+                <option value="台中市">台中市</option>
+                <option value="高雄市">高雄市</option>
+                <!-- 其他城市選項 -->
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="customer-district">選擇地區:</label>
+            <select id="customer-district">
+                <option value="">請先選擇市區</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="customer-address">詳細地址:</label>
+            <input type="text" id="customer-address">
+        </div>
+        
+        <div class="form-group">
+            <label for="customer-message">留言:</label>
+            <textarea id="customer-message" rows="3"></textarea>
+        </div>
+    </div>
+    
+    <button id="save-btn">儲存變更</button>
+    <button id="preview-btn">預覽訂單</button>
+    <button id="reset-btn">重設圖片</button>
+    
+    <script>
+        // 圖片上傳功能
+        function setupImageUpload(uploadElementId, fileInputId, previewElementId) {
+            const uploadElement = document.getElementById(uploadElementId);
+            const fileInput = document.getElementById(fileInputId);
+            const previewElement = document.getElementById(previewElementId);
+            
+            uploadElement.addEventListener('click', () => fileInput.click());
+            
+            fileInput.addEventListener('change', function(e) {
+                const files = e.target.files;
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    if (!file.type.match('image.*')) continue;
+                    
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const previewContainer = document.createElement('div');
+                        previewContainer.className = 'preview-container';
+                        
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'preview-image';
+                        
+                        const removeBtn = document.createElement('span');
+                        removeBtn.className = 'remove-image';
+                        removeBtn.innerHTML = '×';
+                        removeBtn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            previewContainer.remove();
+                        });
+                        
+                        previewContainer.appendChild(img);
+                        previewContainer.appendChild(removeBtn);
+                        previewElement.appendChild(previewContainer);
+                    }
+                    
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+        
+        // 設置各圖片上傳區域
+        setupImageUpload('main-image-upload', 'main-product-image', 'main-image-preview');
+        setupImageUpload('item1-image-upload', 'item1-image', 'item1-image-preview');
+        setupImageUpload('item2-image-upload', 'item2-image', 'item2-image-preview');
+        
+        // 重設圖片按鈕
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            if (confirm('確定要清除所有已上傳的圖片嗎？')) {
+                document.querySelectorAll('.image-preview').forEach(el => {
+                    el.innerHTML = '';
+                });
+                document.querySelectorAll('input[type="file"]').forEach(el => {
+                    el.value = '';
+                });
+            }
+        });
+        
+        // 簡單的互動功能
+        document.getElementById('save-btn').addEventListener('click', function() {
+            alert('訂單變更已儲存！');
+        });
+        
+        document.getElementById('preview-btn').addEventListener('click', function() {
+            alert('此功能將顯示訂單預覽');
+            // 實際應用中可以打開一個新視窗顯示訂單預覽
+        });
+        
+        // 簡單的地區選擇聯動
+        const citySelect = document.getElementById('customer-city');
+        const districtSelect = document.getElementById('customer-district');
+        
+        citySelect.addEventListener('change', function() {
+            districtSelect.innerHTML = '<option value="">請選擇地區</option>';
+            
+            if (this.value === '台北市') {
+                addDistricts(['中正區', '大同區', '中山區', '松山區', '大安區', '萬華區', '信義區', '士林區', '北投區', '內湖區', '南港區', '文山區']);
+            } else if (this.value === '新北市') {
+                addDistricts(['板橋區', '三重區', '中和區', '永和區', '新莊區', '新店區', '樹林區', '鶯歌區', '三峽區', '淡水區', '汐止區', '瑞芳區', '土城區', '蘆洲區', '五股區', '泰山區', '林口區', '深坑區', '石碇區', '坪林區', '三芝區', '石門區', '八里區', '平溪區', '雙溪區', '貢寮區', '金山區', '萬里區', '烏來區']);
+            }
+            // 可以繼續添加其他城市的地區
+        });
+        
+        function addDistricts(districts) {
+            districts.forEach(function(district) {
+                const option = document.createElement('option');
+                option.value = district;
+                option.textContent = district;
+                districtSelect.appendChild(option);
+            });
+        }
+    </script>
 </body>
 </html>
