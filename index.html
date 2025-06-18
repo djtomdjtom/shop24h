@@ -5,42 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>訂單管理後台</title>
     <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71;
+            --light-gray: #f8f9fa;
+            --border-color: #ddd;
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             line-height: 1.6;
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 20px;
             color: #333;
+            background-color: #f5f5f5;
         }
         h1, h2, h3 {
             color: #2c3e50;
+            margin-top: 0;
         }
+        h1 { font-size: 28px; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; }
+        h2 { font-size: 22px; }
+        h3 { font-size: 18px; }
         .order-section {
-            margin-bottom: 30px;
-            border: 1px solid #ddd;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
             padding: 20px;
-            border-radius: 5px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .price {
             font-size: 24px;
             font-weight: bold;
-            color: #e74c3c;
+            color: var(--danger-color);
             margin: 10px 0;
         }
         .promotion {
-            background-color: #f8f9fa;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
+            background-color: var(--light-gray);
+            padding: 12px;
+            border-radius: 6px;
+            margin: 12px 0;
+            border-left: 4px solid var(--primary-color);
         }
         .item {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             padding-bottom: 20px;
-            border-bottom: 1px dashed #ddd;
+            border-bottom: 1px dashed var(--border-color);
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 25px;
+        }
+        .item:last-child {
+            border-bottom: none;
         }
         .item-details {
             flex: 1;
@@ -52,45 +71,65 @@
         }
         .image-upload {
             border: 2px dashed #ccc;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
             margin-bottom: 15px;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
+            transition: all 0.3s;
+            background-color: #fafafa;
         }
         .image-upload:hover {
-            border-color: #999;
+            border-color: var(--primary-color);
+            background-color: #f0f8ff;
+        }
+        .image-upload i {
+            font-size: 40px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: block;
         }
         .image-preview {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
             margin-top: 15px;
         }
         .preview-container {
             position: relative;
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .preview-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 5px;
+            transition: transform 0.3s;
+        }
+        .preview-image:hover {
+            transform: scale(1.05);
         }
         .remove-image {
             position: absolute;
-            top: -5px;
-            right: -5px;
-            background: red;
+            top: 5px;
+            right: 5px;
+            background: var(--danger-color);
             color: white;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            line-height: 20px;
+            width: 24px;
+            height: 24px;
+            line-height: 24px;
             text-align: center;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 14px;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        .remove-image:hover {
+            opacity: 1;
         }
         table {
             width: 100%;
@@ -98,273 +137,484 @@
             margin: 15px 0;
         }
         table, th, td {
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
         }
         th, td {
-            padding: 10px;
+            padding: 12px;
             text-align: left;
         }
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
         }
-        input[type="text"], input[type="number"], select, textarea {
+        input[type="text"], input[type="number"], input[type="tel"], select, textarea {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
             box-sizing: border-box;
+            font-size: 15px;
+            transition: border 0.3s;
         }
-        button {
-            background-color: #3498db;
-            color: white;
-            padding: 10px 15px;
+        input[type="text"]:focus, input[type="number"]:focus, input[type="tel"]:focus, 
+        select:focus, textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s;
             margin-right: 10px;
+            margin-bottom: 10px;
         }
-        button:hover {
-            background-color: #2980b9;
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #c0392b;
         }
         .editor-container {
             margin-bottom: 20px;
         }
-        .product-image {
-            max-width: 200px;
-            max-height: 200px;
-            margin: 10px 0;
-            display: block;
-        }
         .hidden {
             display: none;
         }
+        .preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow: auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .preview-content {
+            background: white;
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .close-preview {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #aaa;
+        }
+        .close-preview:hover {
+            color: #333;
+        }
+        .tab-container {
+            margin-bottom: 20px;
+        }
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 15px;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .item {
+                flex-direction: column;
+            }
+            .preview-container {
+                width: 100px;
+                height: 100px;
+            }
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <h1>訂單管理後台</h1>
+    <h1><i class="fas fa-cog"></i> 訂單管理後台</h1>
     
-    <div class="order-section">
-        <h2>產品主圖</h2>
+    <div class="tab-container">
+        <div class="tab-buttons">
+            <button class="tab-btn active" data-tab="product-info">產品資訊</button>
+            <button class="tab-btn" data-tab="shipping-info">物流與付款</button>
+            <button class="tab-btn" data-tab="preview-tab">訂單預覽</button>
+        </div>
         
-        <div class="editor-container">
-            <label for="main-product-image">產品主圖:</label>
-            <input type="file" id="main-product-image" accept="image/*" class="hidden">
-            <div id="main-image-upload" class="image-upload">
-                <p>點擊上傳產品主圖</p>
-                <p><small>建議尺寸: 800x800像素</small></p>
+        <div id="product-info" class="tab-content active">
+            <div class="order-section">
+                <h2><i class="fas fa-image"></i> 產品主圖</h2>
+                
+                <div class="editor-container">
+                    <label for="main-product-image">產品主圖:</label>
+                    <input type="file" id="main-product-image" accept="image/*" class="hidden">
+                    <div id="main-image-upload" class="image-upload">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>點擊或拖放圖片到此區域</p>
+                        <p><small>建議尺寸: 800x800像素，最大5MB</small></p>
+                    </div>
+                    <div id="main-image-preview" class="image-preview"></div>
+                </div>
             </div>
-            <div id="main-image-preview" class="image-preview"></div>
-        </div>
-    </div>
-    
-    <div class="order-section">
-        <h2>訂單基本資訊</h2>
-        
-        <div class="editor-container">
-            <label for="product-title">產品標題:</label>
-            <input type="text" id="product-title" value="高速製冷送你小風扇">
-        </div>
-        
-        <div class="editor-container">
-            <label for="product-price">價格:</label>
-            <input type="text" id="product-price" value="NT$990">
-        </div>
-        
-        <div class="editor-container">
-            <label for="group-option">組合選項:</label>
-            <textarea id="group-option" rows="3">2人組
+            
+            <div class="order-section">
+                <h2><i class="fas fa-info-circle"></i> 基本資訊</h2>
+                
+                <div class="editor-container">
+                    <label for="product-title">產品標題:</label>
+                    <input type="text" id="product-title" value="高速製冷送你小風扇" placeholder="輸入產品標題">
+                </div>
+                
+                <div class="editor-container">
+                    <label for="product-price">價格:</label>
+                    <input type="text" id="product-price" value="NT$990" placeholder="輸入產品價格">
+                </div>
+                
+                <div class="editor-container">
+                    <label for="group-option">組合選項 (每行一項):</label>
+                    <textarea id="group-option" rows="3" placeholder="輸入組合選項">2人組
 618優惠🖩買二送一3人組均價（426）
 618優惠🖩4人組~均價（395）限200組</textarea>
-        </div>
-    </div>
-    
-    <div class="order-section">
-        <h2>商品項目</h2>
-        
-        <div class="item">
-            <div class="item-details">
-                <h3>第1件(已選)</h3>
-                <div class="editor-container">
-                    <label for="item1-color">顏色:</label>
-                    <select id="item1-color">
-                        <option value="白色" selected>白色</option>
-                        <option value="黑色">黑色</option>
-                        <option value="淺紫色">淺紫色</option>
-                    </select>
                 </div>
             </div>
             
-            <div class="item-images">
-                <label>商品圖片:</label>
-                <input type="file" id="item1-image" accept="image/*" class="hidden" multiple>
-                <div id="item1-image-upload" class="image-upload">
-                    <p>點擊上傳商品圖片</p>
-                    <p><small>可上傳多張圖片</small></p>
+            <div class="order-section">
+                <h2><i class="fas fa-box-open"></i> 商品項目</h2>
+                
+                <div class="item">
+                    <div class="item-details">
+                        <h3><i class="fas fa-cube"></i> 第1件(已選)</h3>
+                        <div class="editor-container">
+                            <label for="item1-color">顏色:</label>
+                            <select id="item1-color">
+                                <option value="白色" selected>白色</option>
+                                <option value="黑色">黑色</option>
+                                <option value="淺紫色">淺紫色</option>
+                                <option value="custom">自訂顏色...</option>
+                            </select>
+                            <input type="text" id="item1-custom-color" class="hidden" placeholder="輸入自訂顏色" style="margin-top: 8px;">
+                        </div>
+                    </div>
+                    
+                    <div class="item-images">
+                        <label>商品圖片:</label>
+                        <input type="file" id="item1-image" accept="image/*" class="hidden" multiple>
+                        <div id="item1-image-upload" class="image-upload">
+                            <i class="fas fa-images"></i>
+                            <p>點擊或拖放圖片到此區域</p>
+                            <p><small>可上傳多張圖片</small></p>
+                        </div>
+                        <div id="item1-image-preview" class="image-preview"></div>
+                    </div>
                 </div>
-                <div id="item1-image-preview" class="image-preview"></div>
-            </div>
-        </div>
-        
-        <div class="item">
-            <div class="item-details">
-                <h3>第2件(已選)</h3>
+                
+                <div class="item">
+                    <div class="item-details">
+                        <h3><i class="fas fa-cube"></i> 第2件(已選)</h3>
+                        <div class="editor-container">
+                            <label for="item2-color">顏色:</label>
+                            <select id="item2-color">
+                                <option value="白色" selected>白色</option>
+                                <option value="黑色">黑色</option>
+                                <option value="淺紫色">淺紫色</option>
+                                <option value="custom">自訂顏色...</option>
+                            </select>
+                            <input type="text" id="item2-custom-color" class="hidden" placeholder="輸入自訂顏色" style="margin-top: 8px;">
+                        </div>
+                    </div>
+                    
+                    <div class="item-images">
+                        <label>商品圖片:</label>
+                        <input type="file" id="item2-image" accept="image/*" class="hidden" multiple>
+                        <div id="item2-image-upload" class="image-upload">
+                            <i class="fas fa-images"></i>
+                            <p>點擊或拖放圖片到此區域</p>
+                            <p><small>可上傳多張圖片</small></p>
+                        </div>
+                        <div id="item2-image-preview" class="image-preview"></div>
+                    </div>
+                </div>
+                
                 <div class="editor-container">
-                    <label for="item2-color">顏色:</label>
-                    <select id="item2-color">
-                        <option value="白色" selected>白色</option>
-                        <option value="黑色">黑色</option>
-                        <option value="淺紫色">淺紫色</option>
-                    </select>
+                    <label for="original-price">原價:</label>
+                    <input type="text" id="original-price" value="NT$990" placeholder="輸入產品原價">
+                </div>
+                
+                <div class="editor-container">
+                    <label for="order-price">訂單價格:</label>
+                    <input type="text" id="order-price" value="NT$990" placeholder="輸入訂單價格">
                 </div>
             </div>
             
-            <div class="item-images">
-                <label>商品圖片:</label>
-                <input type="file" id="item2-image" accept="image/*" class="hidden" multiple>
-                <div id="item2-image-upload" class="image-upload">
-                    <p>點擊上傳商品圖片</p>
-                    <p><small>可上傳多張圖片</small></p>
-                </div>
-                <div id="item2-image-preview" class="image-preview"></div>
+            <div class="button-group">
+                <button class="btn btn-primary" id="save-btn">
+                    <i class="fas fa-save"></i> 儲存變更
+                </button>
+                <button class="btn btn-secondary" id="next-to-shipping">
+                    下一步: 物流與付款 <i class="fas fa-arrow-right"></i>
+                </button>
             </div>
         </div>
         
-        <div class="editor-container">
-            <label for="original-price">原價:</label>
-            <input type="text" id="original-price" value="NT$990">
+        <div id="shipping-info" class="tab-content">
+            <div class="order-section">
+                <h2><i class="fas fa-truck"></i> 物流方式</h2>
+                
+                <div class="editor-container">
+                    <label>物流選項:</label>
+                    <table>
+                        <tr>
+                            <td><input type="checkbox" id="delivery1" checked> <label for="delivery1">宅配到府</label></td>
+                            <td><input type="checkbox" id="delivery2" checked> <label for="delivery2">7-11取貨</label></td>
+                            <td><input type="checkbox" id="delivery3" checked> <label for="delivery3">全家取貨</label></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="editor-container">
+                    <label for="delivery-note">物流說明:</label>
+                    <textarea id="delivery-note" rows="3" placeholder="輸入物流說明">您的地址需明確到市區路號（樓、室）。本商場可接受7-11，全家的代收。</textarea>
+                </div>
+            </div>
+            
+            <div class="order-section">
+                <h2><i class="fas fa-money-bill-wave"></i> 付款方式</h2>
+                
+                <div class="editor-container">
+                    <label for="payment-method">付款方式:</label>
+                    <select id="payment-method">
+                        <option value="貨到付款" selected>貨到付款</option>
+                        <option value="信用卡">信用卡</option>
+                        <option value="銀行轉帳">銀行轉帳</option>
+                        <option value="超商付款">超商付款</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-name">姓名:</label>
+                    <input type="text" id="customer-name" placeholder="輸入客戶姓名">
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-phone">手機:</label>
+                    <input type="tel" id="customer-phone" placeholder="輸入客戶手機號碼">
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-country">國家/地區:</label>
+                    <input type="text" id="customer-country" value="台灣" placeholder="輸入國家/地區">
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-city">選擇市區:</label>
+                    <select id="customer-city">
+                        <option value="">請選擇</option>
+                        <option value="台北市">台北市</option>
+                        <option value="新北市">新北市</option>
+                        <option value="台中市">台中市</option>
+                        <option value="高雄市">高雄市</option>
+                        <option value="桃園市">桃園市</option>
+                        <option value="台南市">台南市</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-district">選擇地區:</label>
+                    <select id="customer-district">
+                        <option value="">請先選擇市區</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-address">詳細地址:</label>
+                    <input type="text" id="customer-address" placeholder="輸入詳細地址">
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-message">留言:</label>
+                    <textarea id="customer-message" rows="3" placeholder="輸入客戶留言"></textarea>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-secondary" id="back-to-product">
+                    <i class="fas fa-arrow-left"></i> 上一步
+                </button>
+                <button class="btn btn-primary" id="preview-btn">
+                    <i class="fas fa-eye"></i> 預覽訂單
+                </button>
+            </div>
         </div>
         
-        <div class="editor-container">
-            <label for="order-price">訂單價格:</label>
-            <input type="text" id="order-price" value="NT$990">
+        <div id="preview-tab" class="tab-content">
+            <div class="order-section">
+                <h2><i class="fas fa-eye"></i> 訂單預覽</h2>
+                <div id="order-preview-content">
+                    <!-- 預覽內容將由JavaScript動態生成 -->
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-secondary" id="back-to-shipping">
+                    <i class="fas fa-arrow-left"></i> 上一步
+                </button>
+                <button class="btn btn-primary" id="confirm-order">
+                    <i class="fas fa-check"></i> 確認訂單
+                </button>
+            </div>
         </div>
     </div>
     
-    <div class="order-section">
-        <h2>物流方式</h2>
-        
-        <div class="editor-container">
-            <label>物流選項:</label>
-            <table>
-                <tr>
-                    <td><input type="checkbox" id="delivery1" checked> 宅配到府</td>
-                    <td><input type="checkbox" id="delivery2" checked> 7-11取貨</td>
-                    <td><input type="checkbox" id="delivery3" checked> 全家取貨</td>
-                </tr>
-            </table>
-        </div>
-        
-        <div class="editor-container">
-            <label for="delivery-note">物流說明:</label>
-            <textarea id="delivery-note" rows="3">您的地址需明確到市區路號（樓、室）。本商場可接受7-11，全家的代收。</textarea>
+    <div id="preview-modal" class="preview-modal">
+        <div class="preview-content">
+            <span class="close-preview">&times;</span>
+            <div id="modal-preview-content"></div>
         </div>
     </div>
-    
-    <div class="order-section">
-        <h2>付款方式</h2>
-        
-        <div class="editor-container">
-            <label for="payment-method">付款方式:</label>
-            <input type="text" id="payment-method" value="貨到付款">
-        </div>
-        
-        <div class="form-group">
-            <label for="customer-name">姓名:</label>
-            <input type="text" id="customer-name">
-        </div>
-        
-        <div class="form-group">
-            <label for="customer-phone">手機:</label>
-            <input type="text" id="customer-phone">
-        </div>
-        
-        <div class="form-group">
-            <label for="customer-country">國家/地區:</label>
-            <input type="text" id="customer-country" value="台灣">
-        </div>
-        
-        <div class="form-group">
-            <label for="customer-city">選擇市區:</label>
-            <select id="customer-city">
-                <option value="">請選擇</option>
-                <option value="台北市">台北市</option>
-                <option value="新北市">新北市</option>
-                <option value="台中市">台中市</option>
-                <option value="高雄市">高雄市</option>
-                <!-- 其他城市選項 -->
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="customer-district">選擇地區:</label>
-            <select id="customer-district">
-                <option value="">請先選擇市區</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="customer-address">詳細地址:</label>
-            <input type="text" id="customer-address">
-        </div>
-        
-        <div class="form-group">
-            <label for="customer-message">留言:</label>
-            <textarea id="customer-message" rows="3"></textarea>
-        </div>
-    </div>
-    
-    <button id="save-btn">儲存變更</button>
-    <button id="preview-btn">預覽訂單</button>
-    <button id="reset-btn">重設圖片</button>
     
     <script>
-        // 圖片上傳功能
+        // 圖片上傳功能 (改進版)
         function setupImageUpload(uploadElementId, fileInputId, previewElementId) {
             const uploadElement = document.getElementById(uploadElementId);
             const fileInput = document.getElementById(fileInputId);
             const previewElement = document.getElementById(previewElementId);
             
+            // 點擊上傳
             uploadElement.addEventListener('click', () => fileInput.click());
             
-            fileInput.addEventListener('change', function(e) {
-                const files = e.target.files;
+            // 拖放上傳
+            uploadElement.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadElement.style.borderColor = 'var(--primary-color)';
+                uploadElement.style.backgroundColor = '#e6f2ff';
+            });
+            
+            uploadElement.addEventListener('dragleave', () => {
+                uploadElement.style.borderColor = '#ccc';
+                uploadElement.style.backgroundColor = '#fafafa';
+            });
+            
+            uploadElement.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadElement.style.borderColor = '#ccc';
+                uploadElement.style.backgroundColor = '#fafafa';
                 
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    if (!file.type.match('image.*')) continue;
-                    
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        const previewContainer = document.createElement('div');
-                        previewContainer.className = 'preview-container';
-                        
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
-                        img.className = 'preview-image';
-                        
-                        const removeBtn = document.createElement('span');
-                        removeBtn.className = 'remove-image';
-                        removeBtn.innerHTML = '×';
-                        removeBtn.addEventListener('click', function(e) {
-                            e.stopPropagation();
-                            previewContainer.remove();
-                        });
-                        
-                        previewContainer.appendChild(img);
-                        previewContainer.appendChild(removeBtn);
-                        previewElement.appendChild(previewContainer);
-                    }
-                    
-                    reader.readAsDataURL(file);
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFileUpload(fileInput, previewElement);
                 }
             });
+            
+            // 文件選擇處理
+            fileInput.addEventListener('change', () => {
+                handleFileUpload(fileInput, previewElement);
+            });
+        }
+        
+        function handleFileUpload(fileInput, previewElement) {
+            const files = fileInput.files;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // 檢查是否為圖片
+                if (!file.type.match('image.*')) {
+                    alert('請上傳圖片文件！');
+                    continue;
+                }
+                
+                // 檢查文件大小 (限制5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('圖片大小不能超過5MB！');
+                    continue;
+                }
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const previewContainer = document.createElement('div');
+                    previewContainer.className = 'preview-container';
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'preview-image';
+                    img.title = file.name;
+                    
+                    const removeBtn = document.createElement('span');
+                    removeBtn.className = 'remove-image';
+                    removeBtn.innerHTML = '&times;';
+                    removeBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        previewContainer.remove();
+                        updateFileInput(fileInput, previewElement);
+                    });
+                    
+                    previewContainer.appendChild(img);
+                    previewContainer.appendChild(removeBtn);
+                    previewElement.appendChild(previewContainer);
+                }
+                
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function updateFileInput(fileInput, previewElement) {
+            // 這個功能在純前端無法真正移除已選文件，實際應用中需要後端支持
+            // 這裡只是清空預覽，實際文件輸入框的值不會改變
+            // 在實際應用中，您可能需要使用FormData或其他方式處理文件上傳
         }
         
         // 設置各圖片上傳區域
@@ -372,51 +622,206 @@
         setupImageUpload('item1-image-upload', 'item1-image', 'item1-image-preview');
         setupImageUpload('item2-image-upload', 'item2-image', 'item2-image-preview');
         
-        // 重設圖片按鈕
-        document.getElementById('reset-btn').addEventListener('click', function() {
-            if (confirm('確定要清除所有已上傳的圖片嗎？')) {
-                document.querySelectorAll('.image-preview').forEach(el => {
-                    el.innerHTML = '';
-                });
-                document.querySelectorAll('input[type="file"]').forEach(el => {
-                    el.value = '';
-                });
-            }
-        });
+        // 自訂顏色選擇
+        function setupCustomColorSelect(selectId, inputId) {
+            const select = document.getElementById(selectId);
+            const input = document.getElementById(inputId);
+            
+            select.addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    input.classList.remove('hidden');
+                } else {
+                    input.classList.add('hidden');
+                }
+            });
+        }
         
-        // 簡單的互動功能
-        document.getElementById('save-btn').addEventListener('click', function() {
-            alert('訂單變更已儲存！');
-        });
+        setupCustomColorSelect('item1-color', 'item1-custom-color');
+        setupCustomColorSelect('item2-color', 'item2-custom-color');
         
-        document.getElementById('preview-btn').addEventListener('click', function() {
-            alert('此功能將顯示訂單預覽');
-            // 實際應用中可以打開一個新視窗顯示訂單預覽
-        });
-        
-        // 簡單的地區選擇聯動
+        // 地區選擇聯動
         const citySelect = document.getElementById('customer-city');
         const districtSelect = document.getElementById('customer-district');
+        
+        const districtData = {
+            '台北市': ['中正區', '大同區', '中山區', '松山區', '大安區', '萬華區', '信義區', '士林區', '北投區', '內湖區', '南港區', '文山區'],
+            '新北市': ['板橋區', '三重區', '中和區', '永和區', '新莊區', '新店區', '樹林區', '鶯歌區', '三峽區', '淡水區', '汐止區', '瑞芳區', '土城區', '蘆洲區', '五股區', '泰山區', '林口區', '深坑區', '石碇區', '坪林區', '三芝區', '石門區', '八里區', '平溪區', '雙溪區', '貢寮區', '金山區', '萬里區', '烏來區'],
+            '台中市': ['中區', '東區', '南區', '西區', '北區', '北屯區', '西屯區', '南屯區', '太平區', '大里區', '霧峰區', '烏日區', '豐原區', '后里區', '石岡區', '東勢區', '和平區', '新社區', '潭子區', '大雅區', '神岡區', '大肚區', '沙鹿區', '龍井區', '梧棲區', '清水區', '大甲區', '外埔區', '大安區'],
+            '高雄市': ['楠梓區', '左營區', '鼓山區', '三民區', '鹽埕區', '前金區', '新興區', '苓雅區', '前鎮區', '旗津區', '小港區', '鳳山區', '大寮區', '鳥松區', '林園區', '仁武區', '大樹區', '大社區', '岡山區', '路竹區', '橋頭區', '梓官區', '彌陀區', '永安區', '燕巢區', '田寮區', '阿蓮區', '茄萣區', '湖內區', '旗山區', '美濃區', '內門區', '杉林區', '甲仙區', '六龜區', '茂林區', '桃源區', '那瑪夏區']
+        };
         
         citySelect.addEventListener('change', function() {
             districtSelect.innerHTML = '<option value="">請選擇地區</option>';
             
-            if (this.value === '台北市') {
-                addDistricts(['中正區', '大同區', '中山區', '松山區', '大安區', '萬華區', '信義區', '士林區', '北投區', '內湖區', '南港區', '文山區']);
-            } else if (this.value === '新北市') {
-                addDistricts(['板橋區', '三重區', '中和區', '永和區', '新莊區', '新店區', '樹林區', '鶯歌區', '三峽區', '淡水區', '汐止區', '瑞芳區', '土城區', '蘆洲區', '五股區', '泰山區', '林口區', '深坑區', '石碇區', '坪林區', '三芝區', '石門區', '八里區', '平溪區', '雙溪區', '貢寮區', '金山區', '萬里區', '烏來區']);
+            if (this.value === '其他') {
+                const option = document.createElement('option');
+                option.value = '其他';
+                option.textContent = '其他地區';
+                districtSelect.appendChild(option);
+            } else if (districtData[this.value]) {
+                districtData[this.value].forEach(function(district) {
+                    const option = document.createElement('option');
+                    option.value = district;
+                    option.textContent = district;
+                    districtSelect.appendChild(option);
+                });
             }
-            // 可以繼續添加其他城市的地區
         });
         
-        function addDistricts(districts) {
-            districts.forEach(function(district) {
-                const option = document.createElement('option');
-                option.value = district;
-                option.textContent = district;
-                districtSelect.appendChild(option);
+        // 標籤頁切換
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                
+                // 更新按鈕狀態
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // 更新內容區
+                tabContents.forEach(content => content.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+                
+                // 如果是預覽標籤，生成預覽內容
+                if (tabId === 'preview-tab') {
+                    generateOrderPreview();
+                }
             });
+        });
+        
+        // 導航按鈕
+        document.getElementById('next-to-shipping').addEventListener('click', () => {
+            document.querySelector('.tab-btn[data-tab="shipping-info"]').click();
+        });
+        
+        document.getElementById('back-to-product').addEventListener('click', () => {
+            document.querySelector('.tab-btn[data-tab="product-info"]').click();
+        });
+        
+        document.getElementById('back-to-shipping').addEventListener('click', () => {
+            document.querySelector('.tab-btn[data-tab="shipping-info"]').click();
+        });
+        
+        // 儲存按鈕
+        document.getElementById('save-btn').addEventListener('click', function() {
+            // 這裡可以添加實際的保存邏輯，如AJAX請求到後端
+            alert('訂單變更已儲存！');
+            // 實際應用中可以將表單數據發送到伺服器
+            // saveOrderData();
+        });
+        
+        // 預覽按鈕
+        document.getElementById('preview-btn').addEventListener('click', function() {
+            generateOrderPreview();
+            document.querySelector('.tab-btn[data-tab="preview-tab"]').click();
+        });
+        
+        // 確認訂單按鈕
+        document.getElementById('confirm-order').addEventListener('click', function() {
+            if (confirm('確定要確認此訂單嗎？')) {
+                alert('訂單已確認！');
+                // 實際應用中可以將訂單數據提交到後端處理
+                // submitOrder();
+            }
+        });
+        
+        // 生成訂單預覽
+        function generateOrderPreview() {
+            const previewContent = document.getElementById('order-preview-content');
+            const modalPreviewContent = document.getElementById('modal-preview-content');
+            
+            // 獲取所有表單數據
+            const productTitle = document.getElementById('product-title').value;
+            const productPrice = document.getElementById('product-price').value;
+            const groupOption = document.getElementById('group-option').value;
+            const originalPrice = document.getElementById('original-price').value;
+            const orderPrice = document.getElementById('order-price').value;
+            const deliveryNote = document.getElementById('delivery-note').value;
+            
+            // 獲取商品項目數據
+            const item1Color = document.getElementById('item1-color').value === 'custom' ? 
+                document.getElementById('item1-custom-color').value : document.getElementById('item1-color').value;
+            const item2Color = document.getElementById('item2-color').value === 'custom' ? 
+                document.getElementById('item2-custom-color').value : document.getElementById('item2-color').value;
+            
+            // 獲取物流方式
+            const deliveryMethods = [];
+            if (document.getElementById('delivery1').checked) deliveryMethods.push('宅配到府');
+            if (document.getElementById('delivery2').checked) deliveryMethods.push('7-11取貨');
+            if (document.getElementById('delivery3').checked) deliveryMethods.push('全家取貨');
+            
+            // 獲取客戶信息
+            const customerName = document.getElementById('customer-name').value;
+            const customerPhone = document.getElementById('customer-phone').value;
+            const customerCountry = document.getElementById('customer-country').value;
+            const customerCity = document.getElementById('customer-city').value;
+            const customerDistrict = document.getElementById('customer-district').value;
+            const customerAddress = document.getElementById('customer-address').value;
+            const customerMessage = document.getElementById('customer-message').value;
+            const paymentMethod = document.getElementById('payment-method').value;
+            
+            // 生成預覽HTML
+            let previewHTML = `
+                <h2># 確認訂單</h2>
+                
+                <h3>## ${productTitle}</h3>
+                <div class="price">${productPrice}</div>
+                <div class="promotion">${groupOption.replace(/\n/g, '<br>')}</div>
+                
+                <hr>
+                
+                <h4>### 第1件(已選) ${item1Color}*1</h4>
+                <p><em>規格:</em></p>
+                <ul>
+                    <li>${item1Color}</li>
+                </ul>
+                
+                <h4>### 第2件(已選) ${item2Color}*1</h4>
+                <p><em>規格:</em></p>
+                <ul>
+                    <li>${item2Color}</li>
+                </ul>
+                
+                <hr>
+                
+                <p>原價: ${originalPrice}</p>
+                <p><strong>訂單價格:</strong> ${orderPrice}</p>
+                
+                <p><em>物流方式:</em></p>
+                <p>${deliveryMethods.join(' | ')}</p>
+                <p>${deliveryNote}</p>
+                
+                <hr>
+                
+                <h3>客戶資訊</h3>
+                <p><strong>姓名:</strong> ${customerName}</p>
+                <p><strong>手機:</strong> ${customerPhone}</p>
+                <p><strong>地址:</strong> ${customerCountry} ${customerCity} ${customerDistrict} ${customerAddress}</p>
+                <p><strong>付款方式:</strong> ${paymentMethod}</p>
+                ${customerMessage ? `<p><strong>留言:</strong> ${customerMessage}</p>` : ''}
+            `;
+            
+            previewContent.innerHTML = previewHTML;
+            modalPreviewContent.innerHTML = previewHTML;
         }
+        
+        // 模態框控制
+        const previewModal = document.getElementById('preview-modal');
+        const closePreview = document.querySelector('.close-preview');
+        
+        // 點擊關閉按鈕
+        closePreview.addEventListener('click', () => {
+            previewModal.style.display = 'none';
+        });
+        
+        // 點擊模態框外部
+        window.addEventListener('click', (e) => {
+            if (e.target === previewModal) {
+                previewModal.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
